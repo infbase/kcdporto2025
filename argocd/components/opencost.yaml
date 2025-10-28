@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://opencost.github.io/opencost-helm-chart
-    targetRevision: 1.40.0
+    targetRevision: 2.4.0
     chart: opencost
     helm:
       values: |
@@ -21,11 +21,16 @@ spec:
               enabled: false
             external:
               enabled: true
-              url: https://defaultazuremonitorworkspace-neu-gwh8g8e2g3bxh7d6.northeurope.prometheus.monitor.azure.com
+              url: https://defaultazuremonitorworkspace-neu-gwh8g8e2g3bxh7d6.northeurope.prometheus.monitor.azure.com/api/v1
               bearerTokenFile: /var/run/secrets/tokens/azure-identity-token
           exporter:
+            defaultClusterId: aks1
             extraEnv:
               AZURE_USE_WORKLOAD_IDENTITY_AUTH: "true"
+            extraVolumeMounts:
+              - name: azure-identity-token
+                mountPath: /var/run/secrets/tokens
+                readOnly: true
 
         # Enable workload identity
         podAnnotations:
@@ -36,11 +41,6 @@ spec:
             azure.workload.identity/client-id: "8e91df16-1b7e-46b3-a5ed-7acc4fee28c8"
 
         # Mount Azure identity token for authentication
-        extraVolumeMounts:
-          - name: azure-identity-token
-            mountPath: /var/run/secrets/tokens
-            readOnly: true
-
         extraVolumes:
           - name: azure-identity-token
             projected:
