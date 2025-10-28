@@ -5,19 +5,4 @@ namespace: opencost
 
 resources:
   - namespace.yaml
-  - https://raw.githubusercontent.com/opencost/opencost/develop/kubernetes/opencost.yaml
-  - service-monitor.yaml
   - azure-config.yaml
-
-patches:
-  - path: deployment-patch.yaml
-    target:
-      kind: Deployment
-      name: opencost
-
-configMapGenerator:
-  - name: opencost-config
-    behavior: merge
-    literals:
-      - CLOUD_PROVIDER_API_KEY=azure
-      - CLUSTER_ID=kcdporto-aks
