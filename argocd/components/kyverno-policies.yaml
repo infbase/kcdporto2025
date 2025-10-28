@@ -26,3 +26,10 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
+    syncWave: 1
+  # Wait for Kyverno to be installed first
+  ignoreDifferences:
+    - group: kyverno.io
+      kind: ClusterPolicy
+      jsonPointers:
+        - /spec/validationFailureActionOverrides

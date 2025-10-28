@@ -13,6 +13,10 @@ spec:
     chart: kyverno
     helm:
       values: |
+        # Install CRDs
+        crds:
+          install: true
+
         # Enable background processing for policy reports
         backgroundController:
           enabled: true
@@ -37,9 +41,11 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - Replace=true
     retry:
       limit: 5
       backoff:
         duration: 5s
         factor: 2
         maxDuration: 3m
+    syncWave: 0
