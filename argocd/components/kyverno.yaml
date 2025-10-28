@@ -8,9 +8,26 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:infbase/kcdporto2025
-    targetRevision: main
-    path: components/kyverno
+    repoURL: https://kyverno.github.io/kyverno/
+    targetRevision: 3.5.2
+    chart: kyverno
+    helm:
+      values: |
+        # Enable background processing for policy reports
+        backgroundController:
+          enabled: true
+
+        # Enable cleanup controller
+        cleanupController:
+          enabled: true
+
+        # Enable reports controller
+        reportsController:
+          enabled: true
+
+        # Configure admission controller
+        admissionController:
+          replicas: 3
   destination:
     server: https://kubernetes.default.svc
     namespace: kyverno
@@ -20,7 +37,6 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true
     retry:
       limit: 5
       backoff:
