@@ -22,11 +22,11 @@ spec:
             external:
               enabled: true
               url: https://defaultazuremonitorworkspace-neu-gwh8g8e2g3bxh7d6.northeurope.prometheus.monitor.azure.com
-              bearerTokenFile: /var/run/secrets/tokens/azure-identity-token
           exporter:
             defaultClusterId: aks1
             extraEnv:
               AZURE_USE_WORKLOAD_IDENTITY_AUTH: "true"
+              PROMETHEUS_BEARER_TOKEN_FILE: "/var/run/secrets/tokens/azure-identity-token"
             extraVolumeMounts:
               - name: azure-identity-token
                 mountPath: /var/run/secrets/tokens
