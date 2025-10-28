@@ -14,6 +14,7 @@ spec:
     helm:
       values: |
         clusterName: kcdporto-aks
+
         opencost:
           prometheus:
             internal:
@@ -21,20 +22,20 @@ spec:
             external:
               enabled: true
               url: https://defaultazuremonitorworkspace-neu-gwh8g8e2g3bxh7d6.northeurope.prometheus.monitor.azure.com
+              bearerTokenFile: /var/run/secrets/tokens/azure-identity-token
           exporter:
             extraEnv:
-              # Azure authentication via managed identity
               AZURE_USE_WORKLOAD_IDENTITY_AUTH: "true"
-              PROMETHEUS_BEARER_TOKEN_FILE: "/var/run/secrets/tokens/azure-identity-token"
 
         # Enable workload identity
         podAnnotations:
           azure.workload.identity/use: "true"
 
-        serviceAccount.annotations:
-          azure.workload.identity/client-id: "8e91df16-1b7e-46b3-a5ed-7acc4fee28c8"
+        serviceAccount:
+          annotations:
+            azure.workload.identity/client-id: "8e91df16-1b7e-46b3-a5ed-7acc4fee28c8"
 
-        # Mount service account token for Azure authentication  
+        # Mount Azure identity token for authentication
         extraVolumeMounts:
           - name: azure-identity-token
             mountPath: /var/run/secrets/tokens
