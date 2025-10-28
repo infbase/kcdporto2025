@@ -21,6 +21,31 @@ spec:
             external:
               enabled: true
               url: https://defaultazuremonitorworkspace-neu-gwh8g8e2g3bxh7d6.northeurope.prometheus.monitor.azure.com
+          exporter:
+            extraEnv:
+              # Azure authentication via managed identity
+              AZURE_USE_WORKLOAD_IDENTITY_AUTH: "true"
+              PROMETHEUS_BEARER_TOKEN_FILE: "/var/run/secrets/tokens/azure-identity-token"
+
+        # Enable workload identity
+        podAnnotations:
+          azure.workload.identity/use: "true"
+
+        # Mount service account token for Azure authentication  
+        extraVolumeMounts:
+          - name: azure-identity-token
+            mountPath: /var/run/secrets/tokens
+            readOnly: true
+
+        extraVolumes:
+          - name: azure-identity-token
+            projected:
+              defaultMode: 420
+              sources:
+                - serviceAccountToken:
+                    audience: api://AzureADTokenExchange
+                    expirationSeconds: 3600
+                    path: azure-identity-token
   destination:
     server: https://kubernetes.default.svc
     namespace: opencost
