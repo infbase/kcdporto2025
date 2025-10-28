@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: backend
+  labels:
+    app: backend
+    team: api
+    cost-center: engineering
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbin
+  namespace: backend
+  labels:
+    app: httpbin
+    team: api
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: httpbin
+  template:
+    metadata:
+      labels:
+        app: httpbin
+        team: api
+    spec:
+      containers:
+        - name: httpbin
+          image: kennethreitz/httpbin:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpbin
+  namespace: backend
+spec:
+  selector:
+    app: httpbin
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP

@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: worker
+  labels:
+    app: worker
+    team: processing
+    cost-center: engineering
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stress-ng
+  namespace: worker
+  labels:
+    app: stress-ng
+    team: processing
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: stress-ng
+  template:
+    metadata:
+      labels:
+        app: stress-ng
+        team: processing
+    spec:
+      containers:
+        - name: stress-ng
+          image: polinux/stress-ng:latest
+          command: ["stress-ng"]
+          args:
+            - --cpu
+            - "1"
+            - --cpu-load
+            - "50"
+            - --timeout
+            - "0"
+            - --metrics-brief
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 400m
+              memory: 512Mi
