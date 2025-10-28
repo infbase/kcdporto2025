@@ -21,7 +21,7 @@ spec:
               enabled: false
             external:
               enabled: true
-              url: https://defaultazuremonitorworkspace-neu-gwh8g8e2g3bxh7d6.northeurope.prometheus.monitor.azure.com/api/v1
+              url: https://defaultazuremonitorworkspace-neu-gwh8g8e2g3bxh7d6.northeurope.prometheus.monitor.azure.com
               bearerTokenFile: /var/run/secrets/tokens/azure-identity-token
           exporter:
             defaultClusterId: aks1
