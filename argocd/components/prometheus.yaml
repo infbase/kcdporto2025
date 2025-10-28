@@ -1,0 +1,61 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 25.30.1
+    chart: prometheus
+    helm:
+      values: |
+        server:
+          remoteWrite:
+            - url: https://defaultazuremonitorworkspace-neu-gwh8g8e2g3bxh7d6.northeurope.prometheus.monitor.azure.com/api/v1/write
+              azuread:
+                managedIdentity:
+                  clientId: "431d4c1e-9220-4eed-af93-328333a9c71c"
+          retention: 2d
+          persistentVolume:
+            enabled: true
+            size: 8Gi
+          service:
+            type: ClusterIP
+          serviceAccount:
+            create: true
+            name: prometheus-server
+            annotations:
+              azure.workload.identity/client-id: "431d4c1e-9220-4eed-af93-328333a9c71c"
+          podLabels:
+            azure.workload.identity/use: "true"
+
+        alertmanager:
+          enabled: false
+
+        nodeExporter:
+          enabled: true
+
+        kubeStateMetrics:
+          enabled: true
+
+        pushgateway:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prometheus
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
