@@ -14,20 +14,7 @@ spec:
     helm:
       values: |
         server:
-          remoteWrite:
-            - url: https://defaultazuremonitorworkspace-neu-gwh8g8e2g3bxh7d6.northeurope.prometheus.monitor.azure.com/api/v1/write
-              oauth2:
-                client_id: "f3231852-1c04-4c18-8a96-478d82b82251"
-                client_secret_file: "/etc/prometheus/secrets/azure-prometheus-credentials/client-secret"
-                token_url: "https://login.microsoftonline.com/0c568ebc-c62f-4671-8c99-51ad25cb084c/oauth2/v2.0/token"
-                scopes:
-                  - "https://monitor.azure.com/.default"
-          extraSecretMounts:
-            - name: azure-prometheus-credentials
-              mountPath: /etc/prometheus/secrets/azure-prometheus-credentials
-              secretName: azure-prometheus-credentials
-              readOnly: true
-          retention: 2d
+          retention: 15d
           persistentVolume:
             enabled: true
             size: 8Gi
