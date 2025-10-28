@@ -22,8 +22,21 @@ spec:
             external:
               enabled: true
               url: https://defaultazuremonitorworkspace-neu-gwh8g8e2g3bxh7d6.northeurope.prometheus.monitor.azure.com
+            existingSecretName: azure-prometheus-credentials
+            bearer_token_key: client-secret
           exporter:
             defaultClusterId: aks1
+            extraEnv:
+              AZURE_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: azure-prometheus-credentials
+                    key: client-id
+              AZURE_TENANT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: azure-prometheus-credentials
+                    key: tenant-id
   destination:
     server: https://kubernetes.default.svc
     namespace: opencost
