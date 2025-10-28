@@ -18,15 +18,32 @@ spec:
         opencost:
           prometheus:
             internal:
-              enabled: false
-            external:
               enabled: true
-              url: https://defaultazuremonitorworkspace-neu-gwh8g8e2g3bxh7d6.northeurope.prometheus.monitor.azure.com
-            existingSecretName: azure-prometheus-credentials
-            username_key: client-id
-            password_key: client-secret
+              serviceName: opencost-prometheus
+              namespaceName: opencost
+            external:
+              enabled: false
           exporter:
             defaultClusterId: aks1
+
+        prometheus:
+          server:
+            remoteWrite:
+              - url: https://defaultazuremonitorworkspace-neu-gwh8g8e2g3bxh7d6.northeurope.prometheus.monitor.azure.com/api/v1/write
+                bearer_token_file: /etc/prometheus/secrets/azure-prometheus-credentials/client-secret
+            extraSecretMounts:
+              - name: azure-prometheus-credentials
+                mountPath: /etc/prometheus/secrets/azure-prometheus-credentials
+                secretName: azure-prometheus-credentials
+                readOnly: true
+            retention: 2d
+            persistentVolume:
+              enabled: true
+              size: 8Gi
+          nodeExporter:
+            enabled: true
+          kubeStateMetrics:
+            enabled: true
   destination:
     server: https://kubernetes.default.svc
     namespace: opencost
