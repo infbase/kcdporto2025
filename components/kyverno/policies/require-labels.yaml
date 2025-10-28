@@ -1,0 +1,53 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-cost-labels
+  annotations:
+    policies.kyverno.io/title: Require Cost Allocation Labels
+    policies.kyverno.io/category: FinOps Best Practices
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Pod, Deployment
+    policies.kyverno.io/description: >-
+      Requires all Pods to have cost allocation labels for proper
+      FinOps tracking and chargeback. This helps OpenCost to properly
+      attribute costs to teams, projects, and environments.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: require-team-label
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      validate:
+        message: "Label 'team' is required for cost allocation"
+        pattern:
+          metadata:
+            labels:
+              team: "?*"
+    - name: require-environment-label
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      validate:
+        message: "Label 'environment' is required (dev/staging/prod)"
+        pattern:
+          metadata:
+            labels:
+              environment: "dev|staging|prod"
+    - name: require-cost-center-label
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      validate:
+        message: "Label 'cost-center' is required for chargeback"
+        pattern:
+          metadata:
+            labels:
+              cost-center: "?*"

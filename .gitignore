@@ -1,0 +1,40 @@
+# Kubernetes secrets and sensitive data
+**/secrets.yaml
+**/secret-*.yaml
+*.key
+*.pem
+
+# ArgoCD admin password
+argocd-admin-password.txt
+
+# Backup files
+*.bak
+*.backup
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Terraform (if used later)
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
+# Helm
+charts/
+*.tgz
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/

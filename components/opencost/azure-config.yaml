@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: azure-prometheus-config
+  namespace: opencost
+data:
+  prometheus-endpoint: "https://defaultazuremonitorworkspace-neu-gwh8g8e2g3bxh7d6.northeurope.prometheus.monitor.azure.com"
+  # Update with your Azure Monitor workspace endpoint
