@@ -16,9 +16,24 @@ spec:
         server:
           remoteWrite:
             - url: https://defaultazuremonitorworkspace-neu-gwh8g8e2g3bxh7d6.northeurope.prometheus.monitor.azure.com/api/v1/write
-              azuread:
-                managedIdentity:
-                  clientId: "431d4c1e-9220-4eed-af93-328333a9c71c"
+              oauth2:
+                client_id: "431d4c1e-9220-4eed-af93-328333a9c71c"
+                token_url: "https://login.microsoftonline.com/0c568ebc-c62f-4671-8c99-51ad25cb084c/oauth2/v2.0/token"
+                scopes:
+                  - "https://monitor.azure.com/.default"
+                client_secret_file: "/var/run/secrets/azure/tokens/azure-identity-token"
+          extraVolumes:
+            - name: azure-identity-token
+              projected:
+                sources:
+                  - serviceAccountToken:
+                      path: azure-identity-token
+                      expirationSeconds: 3600
+                      audience: api://AzureADTokenExchange
+          extraVolumeMounts:
+            - name: azure-identity-token
+              mountPath: /var/run/secrets/azure/tokens
+              readOnly: true
           retention: 2d
           persistentVolume:
             enabled: true
