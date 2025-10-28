@@ -1,24 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kcdporto-apps
+  name: opencost
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: kcdporto
+    repoURL: git@github.com:infbase/kcdporto2025
     targetRevision: main
-    path: argocd/applications
+    path: components/opencost
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: opencost
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-      allowEmpty: false
     syncOptions:
       - CreateNamespace=true
     retry:
