@@ -1,10 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: database-app
+  name: team-timberops
   namespace: argocd
   labels:
-    kcdporto: apps
+    kcdporto: teams
+    team: timberops
+    cost-center: ll-403
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -12,10 +14,12 @@ spec:
   source:
     repoURL: git@github.com:infbase/kcdporto2025
     targetRevision: main
-    path: components/custom-apps/database
+    path: applications/teams/timberops
+    directory:
+      recurse: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: database
+    namespace: platform-team
   syncPolicy:
     automated:
       prune: true

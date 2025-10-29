@@ -1,30 +1,21 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: backend
-  labels:
-    app: backend
-    team: api
-    cost-center: engineering
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: httpbin
-  namespace: backend
+  name: mobile-api
+  namespace: splinters-team
   labels:
-    app: httpbin
-    team: api
+    app: mobile-api
+    team: splinters
 spec:
   replicas: 4
   selector:
     matchLabels:
-      app: httpbin
+      app: mobile-api
   template:
     metadata:
       labels:
-        app: httpbin
-        team: api
+        app: mobile-api
+        team: splinters
     spec:
       containers:
         - name: httpbin
@@ -33,20 +24,20 @@ spec:
             - containerPort: 80
           resources:
             requests:
-              cpu: 250m
-              memory: 512Mi
+              cpu: 150m
+              memory: 256Mi
             limits:
-              cpu: 500m
-              memory: 1Gi
+              cpu: 300m
+              memory: 512Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: httpbin
-  namespace: backend
+  name: mobile-api
+  namespace: splinters-team
 spec:
   selector:
-    app: httpbin
+    app: mobile-api
   ports:
     - port: 80
       targetPort: 80

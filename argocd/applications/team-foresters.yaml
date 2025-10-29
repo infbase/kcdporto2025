@@ -1,10 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kcdporto-applications
+  name: team-foresters
   namespace: argocd
   labels:
-    kcdporto: apps
+    kcdporto: teams
+    team: foresters
+    cost-center: ll-405
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -12,12 +14,12 @@ spec:
   source:
     repoURL: git@github.com:infbase/kcdporto2025
     targetRevision: main
-    path: argocd/applications
+    path: applications/teams/foresters
     directory:
       recurse: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: foresters-team
   syncPolicy:
     automated:
       prune: true

@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: login-team
+  labels:
+    team: login
+    cost-center: product
+    department: engineering
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: team-info
+  namespace: login-team
+data:
+  team-name: "Log.in"
+  mission: "Build and maintain our customer platform — from online orders to delivery tracking"
+  cost-center: "product"
+  department: "engineering"
+  budget: "50000"
+  lead: "jane.doe@woodsystems.io"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-platform
+  namespace: login-team
+  labels:
+    app: customer-platform
+    team: login
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: customer-platform
+  template:
+    metadata:
+      labels:
+        app: customer-platform
+        team: login
+    spec:
+      containers:
+        - name: podinfo
+          image: ghcr.io/stefanprodan/podinfo:6.5.4
+          ports:
+            - containerPort: 9898
+          env:
+            - name: PODINFO_UI_COLOR
+              value: "#2E7D32"
+            - name: PODINFO_UI_MESSAGE
+              value: "Log.in Customer Platform"
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 400m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-platform
+  namespace: login-team
+spec:
+  selector:
+    app: customer-platform
+  ports:
+    - port: 9898
+      targetPort: 9898
+  type: ClusterIP

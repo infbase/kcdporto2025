@@ -1,0 +1,109 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: platform-team
+  labels:
+    team: timberops
+    cost-center: platform
+    department: operations
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: team-info
+  namespace: platform-team
+data:
+  team-name: "The TimberOps"
+  mission: "Maintain infrastructure, observability, CI/CD, and on-call rotations"
+  cost-center: "platform"
+  department: "operations"
+  budget: "80000"
+  lead: "david.sre@woodsystems.io"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitoring-stack
+  namespace: platform-team
+  labels:
+    app: monitoring-stack
+    team: timberops
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: monitoring-stack
+  template:
+    metadata:
+      labels:
+        app: monitoring-stack
+        team: timberops
+    spec:
+      containers:
+        - name: monitor
+          image: ghcr.io/stefanprodan/podinfo:6.5.4
+          ports:
+            - containerPort: 9898
+          env:
+            - name: PODINFO_UI_COLOR
+              value: "#FF6F00"
+            - name: PODINFO_UI_MESSAGE
+              value: "TimberOps Monitoring"
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 400m
+              memory: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cicd-runners
+  namespace: platform-team
+  labels:
+    app: cicd-runners
+    team: timberops
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cicd-runners
+  template:
+    metadata:
+      labels:
+        app: cicd-runners
+        team: timberops
+    spec:
+      containers:
+        - name: runner
+          image: polinux/stress-ng:latest
+          command: ["stress-ng"]
+          args:
+            - --cpu
+            - "1"
+            - --cpu-load
+            - "30"
+            - --timeout
+            - "0"
+          resources:
+            requests:
+              cpu: 300m
+              memory: 384Mi
+            limits:
+              cpu: 600m
+              memory: 768Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: monitoring-stack
+  namespace: platform-team
+spec:
+  selector:
+    app: monitoring-stack
+  ports:
+    - port: 9898
+      targetPort: 9898
+  type: ClusterIP

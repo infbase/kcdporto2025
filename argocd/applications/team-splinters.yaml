@@ -1,10 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: worker-app
+  name: team-splinters
   namespace: argocd
   labels:
-    kcdporto: apps
+    kcdporto: teams
+    team: splinters
+    cost-center: ll-402
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -12,10 +14,12 @@ spec:
   source:
     repoURL: git@github.com:infbase/kcdporto2025
     targetRevision: main
-    path: components/custom-apps/worker
+    path: applications/teams/splinters
+    directory:
+      recurse: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: worker
+    namespace: splinters-team
   syncPolicy:
     automated:
       prune: true

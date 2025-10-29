@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: finops-team
+  labels:
+    team: grain-counters
+    cost-center: finops
+    department: operations
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: team-info
+  namespace: finops-team
+data:
+  team-name: "The Grain Counters"
+  mission: "Optimize cloud costs and ensure every AWS resource earns its keep"
+  cost-center: "finops"
+  department: "operations"
+  budget: "30000"
+  lead: "emma.finops@woodsystems.io"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cost-analyzer
+  namespace: finops-team
+  labels:
+    app: cost-analyzer
+    team: grain-counters
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cost-analyzer
+  template:
+    metadata:
+      labels:
+        app: cost-analyzer
+        team: grain-counters
+    spec:
+      containers:
+        - name: analyzer
+          image: ghcr.io/stefanprodan/podinfo:6.5.4
+          ports:
+            - containerPort: 9898
+          env:
+            - name: PODINFO_UI_COLOR
+              value: "#2E7D32"
+            - name: PODINFO_UI_MESSAGE
+              value: "FinOps Cost Analyzer"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 200m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cost-analyzer
+  namespace: finops-team
+spec:
+  selector:
+    app: cost-analyzer
+  ports:
+    - port: 9898
+      targetPort: 9898
+  type: ClusterIP

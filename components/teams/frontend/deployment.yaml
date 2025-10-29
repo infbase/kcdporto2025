@@ -1,0 +1,116 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: frontend-team
+  labels:
+    team: front-end-foresters
+    cost-center: web
+    department: engineering
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: team-info
+  namespace: frontend-team
+data:
+  team-name: "Front-End Foresters"
+  mission: "Craft beautiful web experiences — public website, store interface, and marketing pages"
+  cost-center: "web"
+  department: "engineering"
+  budget: "40000"
+  lead: "alex.ui@woodsystems.io"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-frontend
+  namespace: frontend-team
+  labels:
+    app: web-frontend
+    team: front-end-foresters
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: web-frontend
+  template:
+    metadata:
+      labels:
+        app: web-frontend
+        team: front-end-foresters
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25-alpine
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: store-interface
+  namespace: frontend-team
+  labels:
+    app: store-interface
+    team: front-end-foresters
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: store-interface
+  template:
+    metadata:
+      labels:
+        app: store-interface
+        team: front-end-foresters
+    spec:
+      containers:
+        - name: podinfo
+          image: ghcr.io/stefanprodan/podinfo:6.5.4
+          ports:
+            - containerPort: 9898
+          env:
+            - name: PODINFO_UI_COLOR
+              value: "#F57C00"
+            - name: PODINFO_UI_MESSAGE
+              value: "Wood Store Interface"
+          resources:
+            requests:
+              cpu: 150m
+              memory: 192Mi
+            limits:
+              cpu: 300m
+              memory: 384Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-frontend
+  namespace: frontend-team
+spec:
+  selector:
+    app: web-frontend
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: store-interface
+  namespace: frontend-team
+spec:
+  selector:
+    app: store-interface
+  ports:
+    - port: 9898
+      targetPort: 9898
+  type: ClusterIP

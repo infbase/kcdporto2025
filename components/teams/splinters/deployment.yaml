@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: splinters-team
+  labels:
+    team: splinters
+    cost-center: mobile
+    department: engineering
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: team-info
+  namespace: splinters-team
+data:
+  team-name: "The Splinters"
+  mission: "Develop our mobile apps for field workers, delivery teams, and forestry inspectors"
+  cost-center: "mobile"
+  department: "engineering"
+  budget: "45000"
+  lead: "john.smith@woodsystems.io"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mobile-api
+  namespace: splinters-team
+  labels:
+    app: mobile-api
+    team: splinters
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: mobile-api
+  template:
+    metadata:
+      labels:
+        app: mobile-api
+        team: splinters
+    spec:
+      containers:
+        - name: httpbin
+          image: kennethreitz/httpbin:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 150m
+              memory: 256Mi
+            limits:
+              cpu: 300m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mobile-api
+  namespace: splinters-team
+spec:
+  selector:
+    app: mobile-api
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
