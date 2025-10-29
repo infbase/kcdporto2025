@@ -6,8 +6,9 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: components
   source:
+    name: kcdporto
     repoURL: git@github.com:infbase/kcdporto2025
     targetRevision: main
     path: argocd/components

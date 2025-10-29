@@ -6,7 +6,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: components
   source:
     repoURL: https://opencost.github.io/opencost-helm-chart
     targetRevision: 2.4.0
