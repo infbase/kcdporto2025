@@ -19,6 +19,8 @@ spec:
           kind: DaemonSet
           service:
             type: LoadBalancer
+            annotations:
+              "service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path": /healthz
           ingressClassResource:
             name: nginx
             enabled: true
@@ -28,8 +30,6 @@ spec:
             enabled: true
           metrics:
             enabled: true
-            serviceMonitor:
-              enabled: false
           resources:
             requests:
               cpu: 100m
