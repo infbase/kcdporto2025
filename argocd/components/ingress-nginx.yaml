@@ -19,6 +19,13 @@ spec:
           kind: DaemonSet
           service:
             type: LoadBalancer
+          ingressClassResource:
+            name: nginx
+            enabled: true
+            default: true
+            controllerValue: "k8s.io/ingress-nginx"
+          admissionWebhooks:
+            enabled: true
           metrics:
             enabled: true
             serviceMonitor:
