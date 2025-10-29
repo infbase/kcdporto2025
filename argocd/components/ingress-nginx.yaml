@@ -37,11 +37,6 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
-          config:
-            use-forwarded-headers: "false"
-            compute-full-forwarded-for: "false"
-            use-proxy-protocol: "false"
-            allow-snippet-annotations: "true"
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
