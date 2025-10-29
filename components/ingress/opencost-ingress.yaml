@@ -22,4 +22,4 @@ spec:
               service:
                 name: opencost
                 port:
-                  number: 9003
+                  number: 9090
