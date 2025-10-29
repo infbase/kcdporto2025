@@ -9,7 +9,7 @@ spec:
 
     # Email address used for ACME registration
     # Update this with your email
-    email: your-email@example.com
+    email: it@eso.pt
 
     # Name of a secret used to store the ACME account private key
     privateKeySecretRef:
