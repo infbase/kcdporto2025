@@ -10,10 +10,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - opencost.finops.kcdporto.dev
+        - opencost.kcd.eso.pt
       secretName: opencost-tls
   rules:
-    - host: opencost.finops.kcdporto.dev
+    - host: opencost.kcd.eso.pt
       http:
         paths:
           - path: /

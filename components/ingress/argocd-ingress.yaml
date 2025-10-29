@@ -11,10 +11,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - argocd.finops.kcdporto.dev
+        - argocd.kcd.eso.pt
       secretName: argocd-server-tls
   rules:
-    - host: argocd.finops.kcdporto.dev
+    - host: argocd.kcd.eso.pt
       http:
         paths:
           - path: /
