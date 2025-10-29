@@ -16,6 +16,7 @@ spec:
     helm:
       values: |
         controller:
+          kind: DaemonSet
           service:
             type: LoadBalancer
           metrics:
