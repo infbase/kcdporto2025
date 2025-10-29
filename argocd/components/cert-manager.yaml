@@ -3,10 +3,12 @@ kind: Application
 metadata:
   name: cert-manager
   namespace: argocd
+  labels:
+    kcdporto: components
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: components
+  project: default
   source:
     repoURL: git@github.com:infbase/kcdporto2025
     targetRevision: main

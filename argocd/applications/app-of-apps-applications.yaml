@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: kcdporto-applications
   namespace: argocd
+  labels:
+    kcdporto: apps
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

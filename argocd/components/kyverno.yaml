@@ -3,10 +3,12 @@ kind: Application
 metadata:
   name: kyverno
   namespace: argocd
+  labels:
+    kcdporto: components
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: components
+  project: default
   source:
     repoURL: https://kyverno.github.io/kyverno/
     targetRevision: 3.5.2
