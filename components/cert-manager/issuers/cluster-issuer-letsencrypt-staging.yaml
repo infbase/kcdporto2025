@@ -20,3 +20,7 @@ spec:
       - http01:
           ingress:
             ingressClassName: nginx
+            podTemplate:
+              metadata:
+                labels:
+                  app: cert-manager-acme-http-solver
