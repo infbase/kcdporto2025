@@ -8,7 +8,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: apps
+  project: default
   source:
     repoURL: git@github.com:infbase/kcdporto2025
     targetRevision: main
