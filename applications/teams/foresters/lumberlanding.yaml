@@ -14,17 +14,15 @@ spec:
   source:
     repoURL: git@github.com:infbase/kcdporto2025
     targetRevision: main
-    path: applications/teams/timberops
+    path: applications/teams/foresters/lumberlanding
   destination:
     server: https://kubernetes.default.svc
-    namespace: platform-team
+    namespace: foresters-team
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
       allowEmpty: false
-    syncOptions:
-      - CreateNamespace=true
     retry:
       limit: 5
       backoff:
