@@ -18,7 +18,6 @@ spec:
         service:
           type: ClusterIP
         config:
-          baseURL: "https://headlamp.kcd.eso.pt"
           pluginsDir: "/headlamp/plugins"
           watchPlugins: true
           inCluster: true
