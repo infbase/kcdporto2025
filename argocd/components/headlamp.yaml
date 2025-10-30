@@ -18,22 +18,28 @@ spec:
         service:
           type: ClusterIP
         config:
-          watchPlugins: true
-        pluginsManager:
-          enabled: true
-          configContent: |
-            plugins:
-              - name: cert-manager
-                source: https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_cert-manager
-                version: 0.1.0
-              - name: opencost
-                source: https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_opencost
-                version: 0.1.3
-            installOptions:
-              parallel: true
-              maxConcurrent: 2
-          baseImage: node:lts-alpine
-          version: latest
+          pluginsDir: "/headlamp/plugins"
+        initContainers:
+          - name: install-plugins
+            image: node:20-alpine
+            command:
+              - /bin/sh
+              - -c
+              - |
+                npm install -g @headlamp-k8s/plugin-manager
+                mkdir -p /headlamp/plugins
+                cd /headlamp/plugins
+                npx @headlamp-k8s/plugin-manager install @headlamp-k8s/plugin-cert-manager
+                npx @headlamp-k8s/plugin-manager install @headlamp-k8s/plugin-opencost
+            volumeMounts:
+              - name: plugins
+                mountPath: /headlamp/plugins
+        volumeMounts:
+          - name: plugins
+            mountPath: /headlamp/plugins
+        volumes:
+          - name: plugins
+            emptyDir: {}
         resources:
           requests:
             cpu: 100m
