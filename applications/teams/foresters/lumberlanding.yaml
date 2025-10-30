@@ -1,11 +1,11 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: team-timberops
+  name: lumberlanding
   namespace: argocd
   labels:
     kcdporto: teams
-    team: timberops
+    team: foresters
     cost-center: ll-403
   finalizers:
     - resources-finalizer.argocd.argoproj.io
