@@ -10,7 +10,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://headlamp-k8s.github.io/headlamp
+    repoURL: https://kubernetes-sigs.github.io/headlamp/
     targetRevision: 0.25.1 # Latest stable version
     chart: headlamp
     helm:
