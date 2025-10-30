@@ -10,17 +10,17 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-  - hosts:
-    - lumberlab.kcd.eso.pt
-    secretName: lumberlanding-tls
+    - hosts:
+        - lumberlab.kcd.eso.pt
+      secretName: lumberlanding-tls
   rules:
-  - host: lumberlab.kcd.eso.pt
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: lumberlanding
-            port:
-              number: 80
+    - host: lumberlabs.kcd.eso.pt
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lumberlanding
+                port:
+                  number: 80
