@@ -18,11 +18,12 @@ This repository contains the GitOps configuration and custom applications for ou
 
 ## Domain
 
-**Primary Domain**: `finops.kcdporto.pt`
+**Primary Domain**: `kcd.eso.pt`
 
 Services:
-- ArgoCD: `https://argocd.finops.kcdporto.pt`
-- OpenCost: `https://opencost.finops.kcdporto.pt`
+- ArgoCD: `https://argocd.kcd.eso.pt`
+- OpenCost: `https://opencost.kcd.eso.pt`
+- Headlamp: `headlamp.kcd.eso.pt`
 
 ## Repository Structure
 
