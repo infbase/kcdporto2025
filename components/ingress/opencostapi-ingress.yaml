@@ -1,13 +1,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: opencost
+  name: opencostapi
   namespace: opencost
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/auth-type: basic
-    nginx.ingress.kubernetes.io/auth-secret: opencost-basic-auth
-    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - OpenCost"
 spec:
   ingressClassName: nginx
   tls:
