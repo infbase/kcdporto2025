@@ -11,7 +11,7 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - lumberlab.kcd.eso.pt
+        - lumberlabs.kcd.eso.pt
       secretName: lumberlanding-tls
   rules:
     - host: lumberlabs.kcd.eso.pt
