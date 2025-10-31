@@ -4,6 +4,7 @@ resources:
   - argocd-ingress.yaml
   - opencost-ingress.yaml
   - headlamp-ingress.yaml
+  - opencostapi-ingress.yaml
 
 commonLabels:
   app.kubernetes.io/managed-by: argocd
