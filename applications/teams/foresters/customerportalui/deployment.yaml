@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customerportalui
+  labels:
+    app: customerportalui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: customerportalui
+  template:
+    metadata:
+      labels:
+        app: customerportalui
+    spec:
+      containers:
+      - name: customerportalui
+        image: ghcr.io/lumberlabsinc/customerportalui:latest
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5

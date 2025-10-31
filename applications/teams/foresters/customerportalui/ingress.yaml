@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: customerportalui
+  labels:
+    app: customerportalui
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - customerportal.kcd.eso.pt
+      secretName: lumberlanding-tls
+  rules:
+    - host: customerportal.kcd.eso.pt
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: customerportalui
+                port:
+                  number: 80
