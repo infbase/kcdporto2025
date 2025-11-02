@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: budget-config
+  namespace: timberops
+data:
+  budgets.json: |
+    {
+      "default": 100.0,
+      "foresters-team": 80.0,
+      "timberops": 1200.0,
+    }

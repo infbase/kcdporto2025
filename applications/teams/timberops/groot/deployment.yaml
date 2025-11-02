@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: groot
+  namespace: finops
+  labels:
+    app: groot
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: groot
+  template:
+    metadata:
+      labels:
+        app: groot
+    spec:
+      serviceAccountName: groot
+      containers:
+      - name: groot
+        image: ghcr.io/lumberlabsinc/groot:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: SERVER_ADDR
+          value: ":8080"
+        - name: REDIS_ADDR
+          value: "redis-service.timberops.svc.cluster.local:6379"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: password
+              optional: true
+        - name: REDIS_DB
+          value: "0"
+        - name: OPENCOST_URL
+          value: "http://opencost.opencost.svc.cluster.local:9003"
+        - name: CONFIGMAP_NAME
+          value: "budget-config"
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10

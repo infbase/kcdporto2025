@@ -1,0 +1,56 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: check-budget-with-resources
+  annotations:
+    policies.kyverno.io/title: Check Budget Before Deployment (Resource-based)
+    policies.kyverno.io/category: FinOps
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/description: >-
+      This policy calls the Groot FinOps API with actual resource requests
+      to automatically calculate monthly costs and check if a deployment
+      is within the namespace budget limits before allowing it to be created.
+      NOTE: This example extracts resources from the first container only.
+      For multi-container pods, you may want to sum resources across all containers
+      or create a more sophisticated policy.
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+  - name: check-deployment-budget-from-resources
+    match:
+      any:
+      - resources:
+          kinds:
+          - Deployment
+          - StatefulSet
+          - DaemonSet
+    preconditions:
+      all:
+      - key: "{{ request.operation }}"
+        operator: Equals
+        value: CREATE
+    context:
+    - name: budgetApproval
+      apiCall:
+        urlPath: "http://groot.finops.svc.cluster.local/api/v1/approve"
+        method: POST
+        data:
+        - key: namespace
+          value: "{{ request.namespace }}"
+        - key: resourceName
+          value: "{{ request.object.metadata.name }}"
+        - key: resources
+          value:
+            cpu: "{{ request.object.spec.template.spec.containers[0].resources.requests.cpu || '100m' }}"
+            memory: "{{ request.object.spec.template.spec.containers[0].resources.requests.memory || '128Mi' }}"
+        - key: requestedBy
+          value: "{{ request.userInfo.username }}"
+    validate:
+      message: "Deployment denied by FinOps policy: {{ budgetApproval.reason }}"
+      deny:
+        conditions:
+          any:
+          - key: "{{ budgetApproval.approved }}"
+            operator: Equals
+            value: false
