@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: groot
-  namespace: finops
+  namespace: timberops
   labels:
     app: groot
 spec:
