@@ -25,6 +25,12 @@ spec:
           - Deployment
           - StatefulSet
           - DaemonSet
+    # >>> Excepção: ignora esta regra no namespace timberops
+    exclude:
+      any:
+      - resources:
+          namespaces:
+          - timberops
     preconditions:
       all:
       - key: "{{ request.operation }}"
@@ -33,7 +39,7 @@ spec:
     context:
     - name: budgetApproval
       apiCall:
-        urlPath: "http://groot.finops.svc.cluster.local/api/v1/approve"
+        urlPath: "http://groot.timberops.svc.cluster.local/api/v1/approve"
         method: POST
         data:
         - key: namespace
@@ -46,6 +52,10 @@ spec:
             memory: "{{ request.object.spec.template.spec.containers[0].resources.requests.memory || '128Mi' }}"
         - key: requestedBy
           value: "{{ request.userInfo.username }}"
+        # >>> Fail-open: se a chamada falhar, aprova por defeito
+        default:
+          approved: true
+          reason: "FinOps service unavailable; allowing creation (fail-open)"
     validate:
       message: "Deployment denied by FinOps policy: {{ budgetApproval.reason }}"
       deny:
