@@ -67,10 +67,10 @@ spec:
           timeoutSeconds: 5
         resources:
           limits:
-            cpu: 3000m
+            cpu: 5000m
             memory: 512Mi
           requests:
-            cpu: 100m
+            cpu: 3000m
             memory: 64Mi
         volumeMounts:
           - name: data
