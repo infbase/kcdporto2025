@@ -38,13 +38,14 @@ spec:
       context:
         - name: budgetApproval
           apiCall:
-            urlPath: "https://groot.kcd.eso.pt/api/v1/approve"
+            service:
+              url: "http://groot.timberops.svc.cluster.local/api/v1/approve"
+              headers:
+                - key: Content-Type
+                  value: application/json
+                - key: User-Agent
+                  value: KyvernoPolicy/1.0
             method: POST
-            headers:
-              - key: Content-Type
-                value: application/json
-              - key: User-Agent
-                value: KyvernoPolicy/1.0
             data:
               - key: namespace
                 value: "{{ request.namespace }}"
