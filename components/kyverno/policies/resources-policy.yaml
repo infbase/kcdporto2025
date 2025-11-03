@@ -17,45 +17,48 @@ spec:
   validationFailureAction: Enforce
   background: false
   rules:
-  - name: check-deployment-budget-from-resources
-    match:
-      any:
-      - resources:
-          kinds:
-          - Deployment
-          - StatefulSet
-          - DaemonSet
-    exclude:
-      any:
-      - resources:
-          namespaces:
-          - timberops
-    preconditions:
-      all:
-      - key: "{{ request.operation }}"
-        operator: Equals
-        value: CREATE
-    context:
-    - name: budgetApproval
-      apiCall:
-        urlPath: "http://groot.timberops.svc.cluster.local/api/v1/approve"
-        method: POST
-        data:
-        - key: namespace
-          value: "{{ request.namespace }}"
-        - key: resourceName
-          value: "{{ request.object.metadata.name }}"
-        - key: resources
-          value:
-            cpu: "{{ request.object.spec.template.spec.containers[0].resources.requests.cpu || '100m' }}"
-            memory: "{{ request.object.spec.template.spec.containers[0].resources.requests.memory || '128Mi' }}"
-        - key: requestedBy
-          value: "{{ request.userInfo.username }}"
-    validate:
-      message: "Deployment denied by FinOps policy: {{ budgetApproval.reason }}"
-      deny:
-        conditions:
-          any:
-          - key: "{{ budgetApproval.approved }}"
+    - name: check-deployment-budget-from-resources
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+                - StatefulSet
+                - DaemonSet
+      exclude:
+        any:
+          - resources:
+              namespaces:
+                - timberops
+      preconditions:
+        all:
+          - key: "{{ request.operation }}"
             operator: Equals
-            value: false
+            value: CREATE
+      context:
+        - name: budgetApproval
+          apiCall:
+            urlPath: "http://groot.timberops.svc.cluster.local/api/v1/approve"
+            method: POST
+            headers:
+              - key: Content-Type
+                value: application/json
+            data:
+              - key: namespace
+                value: "{{ request.namespace }}"
+              - key: resourceName
+                value: "{{ request.object.metadata.name }}"
+              - key: resources
+                value:
+                  cpu: "{{ request.object.spec.template.spec.containers[0].resources.requests.cpu || '100m' }}"
+                  memory: "{{ request.object.spec.template.spec.containers[0].resources.requests.memory || '128Mi' }}"
+              - key: requestedBy
+                value: "{{ request.userInfo.username }}"
+      validate:
+        message: "Deployment denied by FinOps policy: {{ budgetApproval.reason }}"
+        deny:
+          conditions:
+            any:
+              - key: "{{ budgetApproval.approved }}"
+                operator: Equals
+                value: false
