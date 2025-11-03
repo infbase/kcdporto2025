@@ -43,6 +43,8 @@ spec:
             headers:
               - key: Content-Type
                 value: application/json
+              - key: User-Agent
+                value: KyvernoPolicy/1.0
             data:
               - key: namespace
                 value: "{{ request.namespace }}"
