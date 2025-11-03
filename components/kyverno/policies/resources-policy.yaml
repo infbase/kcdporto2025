@@ -25,7 +25,6 @@ spec:
           - Deployment
           - StatefulSet
           - DaemonSet
-    # >>> Excepção: ignora esta regra no namespace timberops
     exclude:
       any:
       - resources:
@@ -52,10 +51,6 @@ spec:
             memory: "{{ request.object.spec.template.spec.containers[0].resources.requests.memory || '128Mi' }}"
         - key: requestedBy
           value: "{{ request.userInfo.username }}"
-        # >>> Fail-open: se a chamada falhar, aprova por defeito
-        default:
-          approved: true
-          reason: "FinOps service unavailable; allowing creation (fail-open)"
     validate:
       message: "Deployment denied by FinOps policy: {{ budgetApproval.reason }}"
       deny:
